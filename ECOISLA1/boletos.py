@@ -6,8 +6,10 @@ from PyQt6.QtCore import Qt, QSize
 
 from base_ui import VentanaBase, COLOR_PRINCIPAL, FORMATO_FECHA_ESPANOL
 
+# Primera ventana, responsable de la seleccion de los boletos. Hereda la estructura basica (header y barra de pasos) de VentanaBase 
 class VentanaBoletos(VentanaBase):
     
+    #Definicion en base css para los botones de contador 
     ESTILO_BTN_CANTIDAD = "QPushButton { border: 1px solid #000080; border-radius: 8px; font-size: 16pt; background-color: #f0f8ff; color: #000080; } QPushButton:hover { background-color: #e6f3ff; }"
     ESTILO_CONTADOR = "border: 1px solid #D3D3D3; border-radius: 8px; background-color: white; font-size: 14pt; color: #333333;"
 
@@ -21,6 +23,7 @@ class VentanaBoletos(VentanaBase):
 
         self.armar_ventana()
 
+    # Metodo principal ensamblar el contenido específico de esta ventana
     def armar_ventana(self):
         self.crear_pasos_navegacion(1) 
         
@@ -36,9 +39,9 @@ class VentanaBoletos(VentanaBase):
         
         self.crear_fila_boleto(diseno_contenido)
 
+        # Etiqueta para mostrar el total de la compra
         self.eti_total = QLabel("Total: $0")
         self.eti_total.setFont(QFont("Calibri", 16, QFont.Weight.Bold))
-
         self.eti_total.setStyleSheet(f"color: {self.COLOR_PRINCIPAL}; padding: 10px; border: 1px dashed {self.COLOR_PRINCIPAL}; border-radius: 5px; margin-top: 15px;")
         diseno_contenido.addWidget(self.eti_total, alignment=Qt.AlignmentFlag.AlignCenter)
 
@@ -47,6 +50,7 @@ class VentanaBoletos(VentanaBase):
 
         self.crear_pie_pagina(self.layout_maestro)
 
+    #Metodo para crear la fila con el nombre del boleto y los botones
     def crear_fila_boleto(self, layout_padre):
         fila_boleto = QHBoxLayout()
         fila_boleto.setContentsMargins(50, 0, 50, 0) 
@@ -84,6 +88,7 @@ class VentanaBoletos(VentanaBase):
         
         layout_padre.addLayout(fila_boleto) 
 
+    #Metodo para crear un boton que te lleve a la siguiente seccion
     def crear_pie_pagina(self, layout_padre):
         diseno_pie = QHBoxLayout()
         diseno_pie.setContentsMargins(50, 20, 50, 20)
@@ -99,11 +104,12 @@ class VentanaBoletos(VentanaBase):
 
         layout_padre.addLayout(diseno_pie)
         
+    #Metodo para manejar el contador y aplicar el limite.
     def actualizar_conteo(self, cambio):
         nuevo_conteo = self.cant_adulto + cambio
         if 0 <= nuevo_conteo <= 10:
             self.cant_adulto = nuevo_conteo
-            self.eti_contador.setText(str(self.cant_adulto))
+            self.eti_contador.setText(str(self.cant_adulto)) 
             self.calcular_total() 
         else:
             QMessageBox.warning(self, "Límite", "Solo puedes seleccionar entre 1 y 10 boletos.")
@@ -118,4 +124,5 @@ class VentanaBoletos(VentanaBase):
             QMessageBox.warning(self, "Requerido", "Debes seleccionar al menos 1 boleto para continuar.")
             return
         
+        # Llama al método de la ventana principal para registrar el dato y cambiar de pantalla
         self.main_window.registrar_boletos(self.cant_adulto)

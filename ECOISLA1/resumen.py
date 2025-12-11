@@ -8,6 +8,7 @@ import os
 
 from base_ui import VentanaBase, FORMATO_FECHA_ESPANOL, LOCALE_ESPANOL
 
+#Paso 4 
 class VentanaResumen(VentanaBase):
     
     PRECIO_UNITARIO = 15000 
@@ -28,14 +29,15 @@ class VentanaResumen(VentanaBase):
         self.costo_total = 0
         
         self.armar_ventana()
-        
+    
+    #Metodo para llamar a main.py para recibir todos los datos del viaje 
     def actualizar_datos(self, datos_viaje):
         self.datos = datos_viaje
         self.costo_total = self.datos['cant_boletos'] * self.PRECIO_UNITARIO
         
         self._actualizar_panel_resumen()
-
-    def guardar_reserva_en_archivo(self):
+     
+    #Metodo que es reponsable de generar un texto que guarda los detalles de la compra en un archivo de texto plano.  
         try:
             linea_venta = (
                 f"--- NUEVA COMPRA ---\n"
@@ -65,9 +67,7 @@ class VentanaResumen(VentanaBase):
             QApplication.quit()
         else:
             pass
-
-
-
+        
     def armar_ventana(self):
         self.crear_pasos_navegacion(4) 
         
@@ -88,7 +88,8 @@ class VentanaResumen(VentanaBase):
 
     def _crear_item_simple(self, titulo, valor):
         return QLabel(f"<b>{titulo}:</b> {valor}", font=QFont("Calibri", 16))
-
+    
+    #Limpia y rellena el panel de resumen con los datos actuales del viaje.
     def _actualizar_panel_resumen(self):
         if self.panel_resumen.layout():
             layout = self.panel_resumen.layout()

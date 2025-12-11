@@ -17,11 +17,13 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("ECO ISLAS - Sistema de Reserva Centralizado")
         self.setFixedSize(1000, 750)
         
+        #Constantes y datos de viaje 
         self.COLOR_PRINCIPAL = base_ui.COLOR_PRINCIPAL
         self.COLOR_FONDO_NAV = base_ui.COLOR_FONDO_NAV
         self.LOCALE_ESPANOL = base_ui.LOCALE_ESPANOL
         self.FORMATO_FECHA_ESPANOL = base_ui.FORMATO_FECHA_ESPANOL
 
+        ## Iniciar la fecha desde el día de hoy 
         fecha_ini = self.LOCALE_ESPANOL.toString(QDate.currentDate(), self.FORMATO_FECHA_ESPANOL)
         self.datos_viaje = {
             'cant_boletos': 0,
@@ -31,6 +33,7 @@ class MainWindow(QMainWindow):
             'asientos': []
         }
         
+        #Mecanismo para cambiar de las paginas más adelantadas a la principal
         self.contenedor_principal = QStackedWidget()
         self.setCentralWidget(self.contenedor_principal)
         
@@ -52,6 +55,7 @@ class MainWindow(QMainWindow):
         EstiloBoton1 = f"QPushButton {{ color: {verde}; background-color: transparent; border: 2px solid {verde}; border-radius: 15px; padding: 5px 15px; }} QPushButton:hover {{ background-color: rgba(46, 139, 87, 0.1); }}"
         EstiloBusqueda = f"QPushButton {{ background-color: rgba(173, 216, 230, 0.7); border-radius: 25px; padding: 10px 20px; border: none; color: #36454F; text-align: left; }}"
         
+        # Diseño del encabezado
         Encabezado = QHBoxLayout()
         Encabezado.setContentsMargins(20, 15, 20, 15)
         
@@ -65,7 +69,8 @@ class MainWindow(QMainWindow):
         
         Diseño_Principal.addLayout(Encabezado)
         Diseño_Principal.addWidget(QFrame(frameShape=QFrame.Shape.HLine, styleSheet="background-color: #A9A9A9; height: 1px;"))
-        
+
+        #Diseño del Cuerpo de la Ventana ( titulo y el boton de búsqueda)
         Cuerpo_Ventana = QVBoxLayout()
         Cuerpo_Ventana.setAlignment(Qt.AlignmentFlag.AlignCenter) 
         
@@ -81,6 +86,7 @@ class MainWindow(QMainWindow):
         botondebusqueda.setStyleSheet(EstiloBusqueda)
         botondebusqueda.setFixedSize(QSize(500, 60)) 
         
+        # Click para empezar el sistema de reservas
         botondebusqueda.clicked.connect(self.iniciar_reserva)
         
         Cuerpo_Ventana.addWidget(botondebusqueda, alignment=Qt.AlignmentFlag.AlignCenter)
@@ -92,6 +98,7 @@ class MainWindow(QMainWindow):
     def _crear_stack_pasos(self):
         stacked = QStackedWidget()
 
+        #Las ventanas siguientes se guardan como atributos para acceder luego a ellas 
         self.v_paso1 = VentanaBoletos(self) 
         self.v_paso2 = VentanaEmbarques(self) 
         self.v_paso3 = VentanaAsientos(self)
@@ -104,15 +111,17 @@ class MainWindow(QMainWindow):
         
         return stacked
 
-
+    # Al apretar el boton este metodo se activa y genera la primera ventana
     def iniciar_reserva(self):
         self.contenedor_principal.setCurrentWidget(self.stack_pasos)
         self.stack_pasos.setCurrentIndex(0) 
         
+    #Cambio de pagina al lugar elegido 
     def goto_paso(self, index):
         if 0 <= index < self.stack_pasos.count():
             self.stack_pasos.setCurrentIndex(index)
         
+    #Recibe la cantidad de boletos para luego avanzar al tercer paso
     def registrar_boletos(self, cant_boletos):
         self.datos_viaje['cant_boletos'] = cant_boletos
         self.v_paso2.actualizar_datos(cant_boletos=cant_boletos)
@@ -122,33 +131,35 @@ class MainWindow(QMainWindow):
         self.datos_viaje['embarcacion'] = embarcacion
         self.datos_viaje['horario'] = horario
         
+        # Pasa todos los datos necesarios al siguiente paso para su visualización/lógica
         self.v_paso3.actualizar_datos(
             cant_boletos=self.datos_viaje['cant_boletos'],
             fecha=self.datos_viaje['fecha'],
             embarcacion=embarcacion,
             horario=horario
         )
-        self.goto_paso(2) 
+        self.goto_paso(2)
 
     def registrar_asientos(self, asientos_seleccionados):
         self.datos_viaje['asientos'] = asientos_seleccionados
-        self.v_paso4.actualizar_datos(self.datos_viaje)
+        self.v_paso4.actualizar_datos(self.datos_viaje) # Pasa todos los datos del viaje al Resumen
         self.goto_paso(3) 
         
     def finalizar_compra(self):
         QMessageBox.information(self, "¡Compra Exitosa!", 
-                                f"Total pagado: ${self.datos_viaje['cant_boletos'] * 15000:,.0f}\n"
-                                f"Recibirás los detalles de tu reserva ({self.datos_viaje['embarcacion']} - {self.datos_viaje['horario']}) en tu correo.")
+                                f"Total pagado: ${self.datos_viaje['cant_boletos'] * 15000:,.0f}\n") 
         QApplication.quit()
 
+    #Metodo para volver al inicio 
     def volver_a_acceso(self):
         self.contenedor_principal.setCurrentWidget(self.ventana_acceso)
         
+# Inicio de la aplicacion
 def iniciar_app():
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec()) # Responsable de ejecutar y mantener activa hasta que el usuario elija cerrrar
 
 if __name__ == "__main__":
     iniciar_app()

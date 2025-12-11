@@ -6,6 +6,8 @@ from PyQt6.QtCore import Qt, QDate
 
 from base_ui import VentanaBase, LOCALE_ESPANOL, FORMATO_FECHA_ESPANOL
 
+
+#Paso 2 
 class VentanaEmbarques(VentanaBase): 
     
     FORMATO_FECHA_ESPANOL = FORMATO_FECHA_ESPANOL 
@@ -15,8 +17,8 @@ class VentanaEmbarques(VentanaBase):
         self.setWindowTitle("ECO ISLAS - Paso 2: Selección de Viaje")
         self.setMinimumSize(800, 650) 
         
+        #Estado inicial del proceso
         self.cant_boletos = 0
-
         self.fecha_seleccionada = LOCALE_ESPANOL.toString(QDate.currentDate(), self.FORMATO_FECHA_ESPANOL)
         self.embarcacion_seleccionada = None
         self.horario_seleccionado = None
@@ -27,33 +29,39 @@ class VentanaEmbarques(VentanaBase):
             "Covadonga": ["Mañana", "Tarde", "Noche"]
         }
         
+        #Diccionario para almacenar referencias a los widgets y manipular estilos fácilmente
         self.cards = {}
         self.botones_horario = {} 
         
         self.armar_ventana()
-        
+
+    # Metodo que recibe la cantidad de boletos y resetea las selecciones visuale llamado desde main.py 
     def actualizar_datos(self, cant_boletos):
         self.cant_boletos = cant_boletos
         self.embarcacion_seleccionada = None
         self.horario_seleccionado = None
+    
+    # Resetea los estilos de todas las tarjetas y botones de horario
         for card in self.cards.values():
             card.setStyleSheet(self._get_card_style(False))
         for btn in self.botones_horario.values():
             btn.setStyleSheet(self._get_horario_style(False))
 
-
+    # Metodo que devuelve el estilo para la tarjeta de embarcacion (resaltado o normal)
     def _get_card_style(self, activo):
         base = "border: 1px solid #D3D3D3; border-radius: 12px; padding: 15px; background-color: white;"
         if activo:
             return "border: 3px solid #000080; border-radius: 12px; padding: 15px; background-color: #e0f0ff;"
         return base
 
+    #Lo mismo  de arriba, devuelve el estilo pero esta vez de botones
     def _get_horario_style(self, activo):
         base = "font: 12pt Calibri; font-weight: bold; border-radius: 5px; padding: 5px 10px;"
         if activo:
             return base + f"background-color: {self.COLOR_PRINCIPAL}; color: white; border: 1px solid #38761D;" 
         return base + "background-color: #D3D3D3; color: #333; border: 1px solid #D3D3D3;"
 
+    #Metodo para manejar la lógica cuando el usuario hace clic en un botón de horario
     def _seleccionar_horario(self, nombre_embarcacion, horario):
         
         self.embarcacion_seleccionada = nombre_embarcacion
@@ -69,6 +77,7 @@ class VentanaEmbarques(VentanaBase):
                 btn.setStyleSheet(self._get_horario_style(is_active))
                 
         self._validar_y_avanzar()
+
 
     def _validar_y_avanzar(self):
         if not self.fecha_seleccionada or not self.embarcacion_seleccionada or not self.horario_seleccionado:
@@ -140,13 +149,13 @@ class VentanaEmbarques(VentanaBase):
         diseno_vertical.addWidget(QLabel(f"<b>{nombre}</b>", 
                                         font=QFont("Calibri", 18, QFont.Weight.Bold), 
                                         alignment=Qt.AlignmentFlag.AlignCenter))
-        
         diseno_vertical.addSpacing(15)
-        
         diseno_vertical.addWidget(QLabel("Horarios Disponibles", 
                                         font=QFont("Calibri", 14, QFont.Weight.Bold), 
                                         alignment=Qt.AlignmentFlag.AlignCenter))
         
+
+        # Botones de Horario
         diseno_horarios = QVBoxLayout()
         diseno_horarios.setAlignment(Qt.AlignmentFlag.AlignCenter) 
         diseno_horarios.setSpacing(5)
@@ -154,6 +163,8 @@ class VentanaEmbarques(VentanaBase):
         for horario in horarios_disponibles:
             btn_horario = QPushButton(horario, styleSheet=self._get_horario_style(False))
             btn_horario.clicked.connect(lambda checked, h=horario, e=nombre: self._seleccionar_horario(e, h))
+
+             # Almacena el botón en el diccionario global para poder cambiar su estilo después
             self.botones_horario[(nombre, horario)] = btn_horario
             diseno_horarios.addWidget(btn_horario, alignment=Qt.AlignmentFlag.AlignCenter)
             

@@ -1,24 +1,8 @@
 --- NUEVA COMPRA ---
-FECHA COMPRA: 27 de noviembre de 2025
+FECHA COMPRA: 11 de diciembre de 2025
 BOLETOS: 2 x $15,000
-EMBARCACION: Covadonga (Mañana del 27 de noviembre de 2025)
-ASIENTOS: 5D, 5E
-TOTAL PAGADO: $30,000
-----------------------
-
---- NUEVA COMPRA ---
-FECHA COMPRA: 27 de noviembre de 2025
-BOLETOS: 2 x $15,000
-EMBARCACION: Goleta (Mañana del 27 de noviembre de 2025)
-ASIENTOS: 3C, 3D
-TOTAL PAGADO: $30,000
-----------------------
-
---- NUEVA COMPRA ---
-FECHA COMPRA: 27 de noviembre de 2025
-BOLETOS: 2 x $15,000
-EMBARCACION: Esmeralda (Mañana del 27 de noviembre de 2025)
-ASIENTOS: 4D, 4E
+EMBARCACION: Goleta (Mañana del 11 de diciembre de 2025)
+ASIENTOS: 2D, 3D
 TOTAL PAGADO: $30,000
 ----------------------
 

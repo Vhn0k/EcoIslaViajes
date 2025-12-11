@@ -4,6 +4,8 @@ QLabel, QPushButton, QFrame)
 from PyQt6.QtGui import QFont
 from PyQt6.QtCore import Qt, QLocale, QDate 
 
+
+#Constantes globales 
 COLOR_PRINCIPAL = "#2e8b57" 
 COLOR_FONDO_NAV = "#000080" 
 LOCALE_ESPANOL = QLocale(QLocale.Language.Spanish, QLocale.Country.Chile)
@@ -11,7 +13,7 @@ FORMATO_FECHA_ESPANOL = "dd 'de' MMMM 'de' yyyy"
 
 QLocale.setDefault(LOCALE_ESPANOL)
 
-
+#Clase base o padre de todo el sistema de reservas, de aqui se define el layout principal, encabezado y la barra de navegacion de pasos
 class VentanaBase(QWidget):
   
     COLOR_PRINCIPAL = COLOR_PRINCIPAL
@@ -23,11 +25,14 @@ class VentanaBase(QWidget):
         self.layout_maestro = QVBoxLayout(self)
         self.layout_maestro.setContentsMargins(0, 0, 0, 0)
         
+        #Añade un encabezado 
         self.layout_maestro.addWidget(self._crear_header())
 
+        #Layout para la navegación de pasos 
         self.layout_pasos = QHBoxLayout()
         self.layout_maestro.addLayout(self.layout_pasos)
         
+        #Linea divisora después de la navegación de pasos
         self.layout_maestro.addWidget(QFrame(frameShape=QFrame.Shape.HLine, 
         styleSheet="background-color: #D3D3D3; height: 1px;"))
         
@@ -44,8 +49,9 @@ class VentanaBase(QWidget):
         
         diseno_header.addWidget(QPushButton("Menú ☰", 
         styleSheet="color: white; background-color: transparent; border: 1px solid white; border-radius: 10px; padding: 5px 10px;"))
-        return frame
-
+        return frame 
+    
+    #Metodo responsable de generar esa negrita en cada ventana de la barra. 
     def crear_pasos_navegacion(self, paso_actual):
        
         while self.layout_pasos.count():

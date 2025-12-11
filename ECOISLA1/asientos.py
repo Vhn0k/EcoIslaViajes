@@ -7,6 +7,7 @@ from PyQt6.QtCore import Qt, QLocale, QDate
 
 from base_ui import VentanaBase, LOCALE_ESPANOL, FORMATO_FECHA_ESPANOL
 
+#Paso 3 
 class VentanaAsientos(VentanaBase):
     
     COLUMNAS = ['A', 'B', 'C', 'D', 'E']
@@ -21,12 +22,13 @@ class VentanaAsientos(VentanaBase):
         self.embarcacion = ""
         self.horario = ""
         
-        self.asientos_seleccionados = {} 
+        self.asientos_seleccionados = {}  # Diccionario para rastrear los asientos elegidos 
         self.max_asientos = 0
-        self.botones_asientos = {} 
+        self.botones_asientos = {} # Diccionario para acceder a los QPushButtons de la cuadrícula
         
         self.armar_ventana()
         
+    #Metodo llamado de main.py nuevamente, recibe y actualiza los datos del viaje.
     def actualizar_datos(self, cant_boletos, fecha, embarcacion, horario):
         self.cant_boletos = cant_boletos
         self.fecha_viaje = fecha
@@ -55,8 +57,10 @@ class VentanaAsientos(VentanaBase):
         elif estado == 'SELECCIONADO':
             return base + "background-color: #000080; color: white; border: 2px solid #2e8b57;"
         
+    #Metodo que maneja si un asiento esta seleccionado o no
     def _toggle_asiento(self, asiento_id):
         if asiento_id in self.asientos_seleccionados:
+
             del self.asientos_seleccionados[asiento_id]
             self.botones_asientos[asiento_id].setStyleSheet(self._get_asiento_style('DISPONIBLE'))
         else:
@@ -105,6 +109,7 @@ class VentanaAsientos(VentanaBase):
         
         mapa_asientos = self._crear_panel_asientos()
         
+        # Contenedor para el mapa de asientos
         vbox_wrap = QVBoxLayout()
         vbox_wrap.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
         vbox_wrap.addWidget(mapa_asientos)
@@ -116,6 +121,7 @@ class VentanaAsientos(VentanaBase):
         
         self._actualizar_contador()
 
+    #Creacion del mapa de asientos 
     def _crear_panel_asientos(self):
         panel = QWidget()
         diseno_asientos = QGridLayout(panel)
